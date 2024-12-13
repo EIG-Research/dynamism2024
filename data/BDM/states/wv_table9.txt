@@ -1,0 +1,171 @@
+Table 9. Private sector establishment births and deaths, seasonally adjusted
+
+West Virginia
+
+Total private
+
+                                   Births(1)                       Deaths(2)
+Year  3 months ended  Establishments     Employment   Establishments     Employment
+
+1992  September              N/A               N/A           965             4,862
+      December               N/A               N/A           853             3,831
+ 
+1993  March                  N/A               N/A           790             5,492
+      June                 1,118             5,414         1,010             5,068
+      September            1,169             6,441           898             4,176
+      December             1,079             5,374           989             4,488
+ 
+1994  March                1,018             5,081           973             4,386
+      June                 1,168             5,582           816             3,465
+      September            1,173             6,429           978             5,506
+      December               892             4,577           963             4,789
+ 
+1995  March                1,060             6,478           931             4,919
+      June                 1,381             7,974           973             4,114
+      September            1,014             5,264           964             4,507
+      December             1,125             6,497         1,078             5,447
+ 
+1996  March                  994             4,883         1,053             5,898
+      June                 1,090             7,332           948             3,669
+      September            1,112             5,443           989             4,793
+      December             1,169             7,275         1,097             5,550
+ 
+1997  March                1,088             4,923         1,052             4,360
+      June                 1,063             5,188         1,031             4,619
+      September            1,231             7,423           938             3,877
+      December             1,097             6,415         1,081             4,796
+ 
+1998  March                  978             5,165           991             5,749
+      June                 1,324             7,059         1,017             4,703
+      September            1,131             5,356         1,050             4,867
+      December             1,074             6,441         1,058             4,653
+ 
+1999  March                1,073             5,574         1,109             5,367
+      June                   973             5,612         1,007             5,785
+      September            1,045             5,587         1,150             6,306
+      December             1,059             6,210         1,049             4,668
+ 
+2000  March                1,097             5,391         1,085             5,869
+      June                   970             5,318         1,070             4,803
+      September              977             4,539         1,142             5,352
+      December               961             5,039         1,057             4,108
+ 
+2001  March                  958             4,394         1,150             4,322
+      June                 1,031             4,470         1,154             4,904
+      September              903             4,369         1,190             5,130
+      December               884             4,694         1,037             4,393
+ 
+2002  March                1,091             5,150         1,004             5,078
+      June                   877             3,850         1,112             4,986
+      September            1,007             4,445           947             3,889
+      December               928             4,113           986             4,795
+ 
+2003  March                  941             4,502           967             3,864
+      June                   953             5,154           983             4,119
+      September              989             4,663           915             4,522
+      December             1,034             4,969           881             3,615
+ 
+2004  March                1,068             4,955           886             3,760
+      June                 1,071             4,476           988             3,692
+      September              996             4,770         1,005             4,100
+      December             1,069             4,732           916             4,155
+ 
+2005  March                  919             4,069         1,028             4,607
+      June                 1,073             4,681           877             3,226
+      September              982             4,533           976             3,791
+      December             1,010             5,186         1,009             3,787
+ 
+2006  March                1,051             5,637         1,060             5,261
+      June                   970             4,553           915             3,377
+      September              974             5,190           960             4,189
+      December               913             4,659           989             4,322
+ 
+2007  March                  953             4,702         1,010             3,953
+      June                   898             3,846           978             3,606
+      September              957             4,804           998             3,849
+      December               889             3,902         1,016             4,527
+ 
+2008  March                  934             4,757         1,050             3,552
+      June                   847             3,475           960             3,980
+      September              864             4,010         1,004             4,117
+      December               965             4,086         1,088             4,097
+ 
+2009  March                  874             4,197         1,096             3,943
+      June                   772             3,263         1,025             4,220
+      September              744             3,599           916             3,326
+      December               877             3,325           937             3,488
+ 
+2010  March                  819             3,455           947             3,050
+      June                   840             3,297           923             4,352
+      September              745             3,325           947             2,870
+      December               903             2,886           910             3,377
+ 
+2011  March                  808             3,869           892             3,145
+      June                   942             4,233           906             3,428
+      September              956             4,536           886             3,372
+      December               998             4,127           886             3,087
+ 
+2012  March                  891             3,629           876             2,805
+      June                   859             4,136           999             4,320
+      September              841             3,803           925             3,387
+      December               808             4,088           801             3,544
+ 
+2013  March                  884             4,013           906             3,163
+      June                   831             3,520         1,071             3,723
+      September              811             3,236           900             3,284
+      December               716             3,114           926             3,559
+ 
+2014  March                  861             4,545           896             3,473
+      June                   920             3,882           988             3,868
+      September              867             3,324           877             4,346
+      December               978             3,738           933             3,405
+ 
+2015  March                  996             4,584         1,015             3,594
+      June                   817             3,384           943             3,315
+      September              818             3,257           967             3,524
+      December               915             3,622         1,021             4,336
+ 
+2016  March                  793             3,291           918             3,023
+      June                   830             3,598           881             3,140
+      September              893             3,783         1,010             3,755
+      December               965             4,221           916             3,492
+ 
+2017  March                  872             3,779           931             3,312
+      June                   952             4,294         1,009             4,403
+      September              867             4,034         1,038             3,849
+      December               902             3,881           969             3,576
+ 
+2018  March                  877             4,187           877             2,834
+      June                   915             4,108         1,027             3,738
+      September              944             4,723         1,059             3,926
+      December               923             3,330           887             3,071
+ 
+2019  March                  856             3,376           890             2,834
+      June                 1,046             3,981           990             3,551
+      September              853             3,237         1,019             3,417
+      December               936             3,843         1,031             4,467
+ 
+2020  March                2,599             6,234         1,022             4,315
+      June                   946             3,517         1,503             5,689
+      September            1,088             4,360         1,122             4,814
+      December             1,308             4,141           874             2,612
+ 
+2021  March                1,231             3,998           869             2,969
+      June                 1,425             4,296         1,125             3,482
+      September            1,345             4,095         1,021             3,231
+      December             1,760             5,893         1,118             3,785
+ 
+2022  March                1,629             5,236         1,154             3,881
+      June                 1,552             5,169         1,279             3,933
+      September            1,601             5,231         1,385             4,738
+      December             1,560             4,563         1,411             4,314
+ 
+2023  March                1,496             5,413           973             3,010
+      June                 1,804             5,340         1,467             5,290
+      September            1,838             5,577           N/A               N/A
+      December             1,584             4,667           N/A               N/A
+ 
+2024  March                1,780             6,778           N/A               N/A
+ 
+(1) Values for births are not available for the first three quarters of the time series by definition.
+(2) Values for deaths are not available for the most recent three quarters by definition.
