@@ -93,6 +93,32 @@ print("High propensity applications in November 2024")
 
 ################################################################################
 # statistics for section 2 in report - BFS industry
+  
+print("In how many industries are applications higher in 2024 than 2019")  
+  vals = names(bfs_nation)[2:23]
+  vals = vals[-c(9,19)]
+
+  bfs_nation %>%
+    filter(year==2024 | year==2019) %>%
+    filter(month !="Dec") %>%
+    select(-c("Total High Propensity Applications", "Total Applications")) %>%
+    select(-c(date, month)) %>%
+    ungroup() %>%
+    group_by(year) %>%
+    mutate(across(vals,
+                  ~as.numeric(.))) %>%
+    summarise(across(vals, sum)) %>%
+    pivot_longer(cols = vals) %>%
+    mutate(value = as.numeric(value)) %>%
+    pivot_wider(names_from = year, values_from = value) %>%
+    mutate(`higher in 2024 than 2019` = case_when(
+      `2024` > `2019` ~ "True",
+      `2024` <= `2019` ~ "False"
+    )) %>%
+    ungroup() %>% group_by(`higher in 2024 than 2019`) %>%
+    count()
+  
+    
 
 print("Retail trade high propensity applications Nov 2024")
     
