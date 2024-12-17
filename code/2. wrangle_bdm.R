@@ -8,6 +8,7 @@ library(dplyr)
 library(tidyr)
 library(readxl)
 library(readr)
+library(stringr)
 
 user_path = "/Users/sarah/Documents/GitHub"
 
@@ -27,6 +28,7 @@ state_list = list()
 for (file_name in file_names) {
   
   # read in state data
+  
   state = gsub(paste0(data_path, "/BDM/states/"), "", file_name)
   state = gsub("_table9.txt", "", state)
   print(state)
@@ -39,7 +41,7 @@ for (file_name in file_names) {
     mutate(quarter = str_trim(gsub("NA", "",
                                    paste(`3`, `Establishments...7`))),
            state = state) %>%
-    mutate(`combined` = paste(`...19`, `Employment...20`),
+    mutate(`combined` = paste(`...18`, `...19`, `Employment...20`),
            combined = gsub("NA", "", combined),
            combined = gsub("\\s+", " ", str_trim(combined))) %>%
     
@@ -66,6 +68,7 @@ for (file_name in file_names) {
   
   
   # add to full state list
+  
   state_list[[file_name]] = state_df
 
 }

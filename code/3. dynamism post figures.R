@@ -107,12 +107,19 @@ fig5 = bdm_states %>%
   mutate(date = as.Date(paste(quarter, "1", Year), 
                         format = "%b %d %Y"),
          state = toupper(state)) %>%
-  filter(date =="2024-03-01" | date=="2020-03-01") %>%
-  select(date, state, estab_births) %>%
-  pivot_wider(names_from = date, values_from = estab_births,
-              id_cols = state) %>%
-  mutate(`Change 2020 q1 - 2024 q1` = 100*(`2024-03-01`-`2020-03-01`)/`2020-03-01`,
-         `Net change 2020 q1 - 2024 q1` = `2024-03-01`-`2020-03-01`)
+  filter(date %in% c("2023-06-01", "2023-09-01", "2023-12-01", "2024-03-01",
+                     "2019-03-01", "2019-06-01", "2019-09-01", "2019-12-01")) %>%
+  
+  mutate(period = case_when(
+    Year < 2021 ~ "pre",
+    Year > 2021 ~ "post"
+  )) %>%
+  group_by(state, period) %>%
+  summarise(estab_births = sum(estab_births)) %>%
+  pivot_wider(names_from = period, values_from = estab_births, id_cols = state) %>%
+  mutate(perc_change_births = 100*(post-pre)/pre,
+         net_change_births = post-pre)
+  
 
 write.csv(fig5, paste(output_path, "figures", "fig5.csv",sep="/"))
 
