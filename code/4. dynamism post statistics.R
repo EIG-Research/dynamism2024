@@ -319,15 +319,16 @@ paste("Pre-pandemic trend in establishment births; trend line 1994 - 2019, (excl
     summarise(mean(estab_births))
   
   
-paste("Births since Q3 2021 (thousands):")
+paste("Births since Q2 2021 (thousands):")
 
-  bdm_nation %>% filter(year>=2021) %>%
+  bdm_nation %>% filter(year >= 2021) %>%
     summarise(sum(estab_births))
-
+  4434 - 308
   
 paste("Births between Q3 2017 and Q1 2020 (thousands):")
   bdm_nation %>%
-    filter((period=="September" & year==2017) | 
+    filter((period == "June" & year ==2017) |
+              (period=="September" & year==2017) | 
              (period=="December" & year==2017) | 
              (year >=2018 & year <2020) | 
              (period == "March" & year==2020)) %>%
@@ -380,11 +381,3 @@ paste("Connecticut’s drop:  Q1 2020 was , Q1 2024 was")
     pivot_wider(names_from = Year,
                 values_from = estab_births) %>%
     filter(state=="ct")
-
-  
-########
-# BTOS #
-########  
-  # note--- ALL BTOS STATS CAN BE ESTIAMTED BY LOOKING AT THE FIGURES.
-  
-  

@@ -8,6 +8,7 @@ library(tidyr)
 library(openxlsx)
 library(readxl)
 library(readr)
+library(tidycensus)
 
 # set project paths
 
@@ -100,176 +101,95 @@ write.csv(fig4,
           paste(output_path, "figures", "fig4.csv",sep="/"))
 
 
-# Fig 5:
-# relative to pre-pandemic trends
+# Fig 6: establishment birth map by states
+# Q1 2019 - Q4 2019 versus
+# Q2 2023 - Q1 2024
 
-fig5 = bdm_states %>%
-  mutate(date = as.Date(paste(quarter, "1", Year), 
-                        format = "%b %d %Y"),
-         state = toupper(state)) %>%
-  filter(date %in% c("2023-06-01", "2023-09-01", "2023-12-01", "2024-03-01",
-                     "2019-03-01", "2019-06-01", "2019-09-01", "2019-12-01")) %>%
-  
-  mutate(period = case_when(
-    Year < 2021 ~ "pre",
-    Year > 2021 ~ "post"
-  )) %>%
-  group_by(state, period) %>%
-  summarise(estab_births = sum(estab_births)) %>%
-  pivot_wider(names_from = period, values_from = estab_births, id_cols = state) %>%
-  mutate(perc_change_births = 100*(post-pre)/pre,
-         net_change_births = post-pre)
-  
-
-write.csv(fig5, paste(output_path, "figures", "fig5.csv",sep="/"))
-
-
-################################################################################
-# BTOS - what might the future look like? how are employers reporting their current
-# performance and future performance?
-
-# btos date ids.
-btos_date_varlist = c("202424", "202423",
-                      "202422", "202421", "202420",
-                      "202419", "202418", "202417",
-                      "202416", "202415", "202414",
-                      "202413", "202412", "202411",
-                      "202410", "202409", "202408",
-                      "202407", "202406", "202405",
-                      "202404", "202403", "202402",
-                      "202401", "202326", "202325",
-                      "202324", "202323", "202322",
-                      "202321", "202320", "202319" )
-
-    btos = read_excel(
-      paste(
-        data_path,
-        "BTOS",
-        "National.xlsx",
-        sep="/"
-      ),
-      sheet = "Response Estimates"
-    )
-
-    
-# load in the cross-walk from date id's and actual date values.
-    btos_date_key = read_excel(
-      paste(
-        data_path,
-        "BTOS",
-        "National.xlsx",
-        sep="/"
-      ),
-      sheet = "Collection and Reference Dates"
-    ) %>%
-      select(Smpdt, `Ref End`) %>% na.omit()
-
-    
-    
-# Fig 6.  future performance (nation level)
-    
-    fig6 = btos %>%
-      filter(`Question ID` == 17) %>%
-      select(-c(`Question ID`, `Question`, `Answer ID`)) %>%
-      pivot_longer(cols = btos_date_varlist,
-                   names_to = "Smpdt") %>%
-      pivot_wider(names_from = Answer, values_from = value) %>%
+    fig6 = bdm_states %>%
+      mutate(date = as.Date(paste(quarter, "1", Year), 
+                            format = "%b %d %Y"),
+             state = toupper(state)) %>%
+      filter(date %in% c("2023-06-01", "2023-09-01", "2023-12-01", "2024-03-01",
+                         "2019-03-01", "2019-06-01", "2019-09-01", "2019-12-01")) %>%
       
-      # extract reference period end
-      left_join(btos_date_key, by = "Smpdt") %>%
-      select(-c(Smpdt))
-    
-    # save output
-    write.csv(fig6, paste(output_path, "figures", "fig6.csv", sep="/"))
-    
-    
-    
-    
-# Fig 7. by industry
-    fig7 = read_excel(
-      paste(
-        data_path,
-        "BTOS",
-        "Sector.xlsx",
-        sep="/"
-      ),
-      sheet = "Response Estimates"
-    ) %>%
-      
-      filter(`Question ID` == 17) %>% # future expectations
-      
-      filter(Sector %in% c("23", # construction
-                           "44", "45", # retail trade
-                           "48", "49", # transportation and warehousing
-                           "72", # accommodation and food service
-                           "62")) # healthcare and social assistance
-    
-    unique(fig7$Sector)
-    
-    fig7 = fig7 %>%
-      mutate(`Sector Description` = case_when(
-        Sector == "23" ~ "Construction",
-        Sector == "44" ~ "Retail trade",
-        Sector == "48" ~ "Transportation and warehousing",
-        Sector == "62" ~ "Accommodation and food service",
-        Sector == "72" ~ "Healthcare and social assistance",
+      mutate(period = case_when(
+        Year < 2021 ~ "pre",
+        Year > 2021 ~ "post"
       )) %>%
-      select(-c(Sector, `Question ID`, `Question`, `Answer ID`)) %>%
       
-      pivot_longer(cols = btos_date_varlist,
-                   names_to = "Smpdt") %>% 
+      group_by(state, period) %>%
+      summarise(estab_births = sum(estab_births)) %>%
       
-      left_join(btos_date_key, by = "Smpdt") %>%
-      select(-c(Smpdt)) %>%
+      pivot_wider(names_from = period, 
+                  values_from = estab_births, 
+                  id_cols = state) %>%
       
-      pivot_wider(names_from = "Answer",
-                  values_from = "value",
-                  id_cols = c("Sector Description", "Ref End")) %>%
-      
-      mutate(above_average = as.numeric(gsub("%", "", `Excellent`)) + 
-               as.numeric(gsub("%", "", `Above average`))) %>%
-      select(`Sector Description`, `Ref End`, above_average)%>%
-      pivot_wider(names_from = `Sector Description`, values_from = `above_average`)
-    
-    write.csv(fig7, paste(output_path, "figures", "fig7.csv",sep="/"))
+      mutate(perc_change_births = (post-pre)/pre,
+             net_change_births = post-pre) %>%
+      rename(state_abrev = state) %>%
+      mutate(state = state.name[match(state_abrev, state.abb)]) # for Figure 5 merging 
+
+    write.csv(fig6,
+              paste(output_path, "figures", "fig6.csv",sep="/"))
     
 
-
-# Fig 8. by firm size
-
-  fig8 = read_excel(
-    paste(
-      data_path,
-      "BTOS",
-      "Employment Size Class.xlsx",
-      sep="/"
-    ),
-    sheet = "Response Estimates"
-  ) %>%
-    filter(`Question ID` == 17,
-    ) %>%
-    mutate(`Employee Size` = case_when(
-      Empsize == "A" ~ "1-4",
-      Empsize == "B" ~ "5-9",
-      Empsize == "C" ~ "10-19",
-      Empsize == "D" ~ "20-49",
-      Empsize == "E" ~ "50-99",
-      Empsize == "F" ~ "100-149",
-      Empsize == "G" ~ "200+",
-    )) %>%
+# Fig 5:
+    # relationship with business applications
     
-    select(-c(`Question ID`, `Question`, `Answer ID`, Empsize)) %>%
-    pivot_longer(cols = btos_date_varlist,
-                 names_to = "Smpdt") %>% 
-    left_join(btos_date_key, by = "Smpdt") %>%
-    select(-c(Smpdt)) %>%
-    pivot_wider(names_from = "Answer",
-                values_from = "value",
-                id_cols = c("Employee Size", "Ref End")) %>%
-    mutate(above_average = as.numeric(gsub("%", "", `Excellent`)) + 
-             as.numeric(gsub("%", "", `Above average`))) %>%
-    select(`Employee Size`, `Ref End`, above_average)%>%
-    pivot_wider(names_from = `Employee Size`, values_from = `above_average`)
+    fig5 = bfs_states %>%
+      filter(year == 2023 | 
+               year == 2019)%>%
+      mutate(period = case_when(
+        year < 2021 ~ "pre",
+        year >2021 ~ "post")) %>%
+      select(-c(year, month, date))
+    
+    
+    fig5 = fig5 %>%
+      ungroup() %>%
+      mutate(across(names(fig5)[1:51],
+                    ~ as.numeric(.))) %>% na.omit()
+    
+    fig5 = fig5 %>%
+      group_by(period) %>%
+      pivot_longer(cols = names(fig5)[1:51],
+                   names_to = "state", values_to = "applications") %>%
+      
+      ungroup() %>%
+      group_by(period, state) %>%
+      summarise(applications = sum(as.numeric(applications))) %>%
+      pivot_wider(names_from = period, values_from = applications) %>%
+      mutate(perc_change_apps = (post-pre)/pre,
+             net_change_apps = post-pre)
+    
   
-  write.csv(fig8, paste(output_path, "figures", "fig8.csv",sep="/"))
+           fig5 = merge(fig6, fig5, by = "state")
+    
+    
+      # add in state population
+
+          state_pop =  get_acs(
+            geography = "state",
+            survey = "acs5",
+            variables = "B01003_001",  # Total population
+            year = 2023
+          ) %>%
+            mutate(state = state.abb[match(NAME, state.name)])
+          
   
+          fig5 = left_join(fig5, state_pop, by = c("state_abrev" = "state"))
+    
+    
+    write.csv(fig5, 
+              paste(output_path, "figures", "fig5.csv",sep="/"))
+    
+    
+    # covariance
+    cor(fig5$perc_change_apps, fig5$perc_change_births)
+    
+    # exclude outliers
+    fig5 = fig5 %>% 
+      filter(state != "Delaware" & state != "Wyoming")
+    
+    cor(fig5$perc_change_apps, fig5$perc_change_births)
+    
