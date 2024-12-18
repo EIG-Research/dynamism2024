@@ -12,17 +12,18 @@ library(ggplot2)
 library(readr)
 
 # set project paths
-# working out of drive
 
 user_path = "/Users/sarah/Documents/GitHub"
 
-project_path = file.path(user_path, "/dynamism2024")
-data_path = file.path(project_path, "data")
-output_path = file.path(project_path, "output")
+  project_path = file.path(user_path, "/dynamism2024")
+  data_path = file.path(project_path, "data")
+  output_path = file.path(project_path, "output")
 
-#######
-# BFS #
-#######
+  
+  
+########################
+# BFS (sections 1 - 3) #
+########################
 
 # read in data - national and state level. constructed in wrangle_bfs.R
 load(file.path(output_path, "bfs_nation.RData"))
@@ -65,7 +66,7 @@ print("Monthly average high-propensity applications in 2024")
       summarise(`Monthly mean high propensity` = 
                   mean(`Total High Propensity Applications`,na.rm=TRUE))
 
-  
+
 print("Business applications in January 2024")
 
   bfs_nation %>% filter(year == 2024 & month == "Jan") %>%
@@ -78,10 +79,12 @@ print("Business applications in March 2024")
     select(`Total Applications`)
 
 
-print("High propensity applications low in 2024, in July")
+print("High propensity applications low in 2024, and month of low")
+
+bfs_nation %>% filter(year == 2024 ) %>% 
+  filter(`Total High Propensity Applications` == min(`Total High Propensity Applications`)) %>%
   
-  bfs_nation %>% filter(year == 2024 & month == "Jul") %>%
-      select(`Total High Propensity Applications`)
+  select(month, `Total High Propensity Applications`)
 
   
 print("High propensity applications in November 2024")
@@ -94,7 +97,54 @@ print("High propensity applications in November 2024")
 ################################################################################
 # statistics for section 2 in report - BFS industry
   
-  print("In how many industries are applications higher in 2024 than 2019?")
+  
+  print("Retail trade high propensity applications Nov 2024")
+  
+  bfs_nation %>% filter(year==2024 & month=="Nov") %>%
+    select("Retail Trade: U.S. Total")
+  
+  print("highest industries as a % of high propensity applications in 2024")
+  
+  # total high propensity 2024
+  high_propensity = bfs_nation %>% filter(year==2024) %>%
+    mutate(`Total High Propensity Applications` =as.numeric(`Total High Propensity Applications`)) %>%
+    summarise(val = sum(`Total High Propensity Applications`, na.rm=TRUE))
+  high_propensity = high_propensity$val
+  
+  bfs_nation %>% filter(year==2024) %>%
+    ungroup() %>%
+    
+    # pivot longer using states
+    pivot_longer(cols = names(bfs_nation)[2:23]) %>%
+    ungroup() %>% group_by(year, name) %>%
+    summarise(value = sum(as.numeric(value), na.rm=TRUE)) %>%
+    arrange(desc(value)) %>%
+    mutate(`share of high propensity` = 100*value/high_propensity)
+  
+  
+  print("Increase in healthcare & social service high propensity applications last 2 years Nov 2022 - Nov 2024")
+  
+  bfs_nation %>%
+    filter((year==2024 & month == "Nov") | (year==2022 & month=="Nov")) %>%
+    select(year, `Health Care and Social Assistance: U.S. Total`) %>%
+    
+    mutate(`Health Care and Social Assistance: U.S. Total` = 
+             as.numeric(`Health Care and Social Assistance: U.S. Total`)) %>%
+    
+    mutate(growth =100*(`Health Care and Social Assistance: U.S. Total` - lag(`Health Care and Social Assistance: U.S. Total`))/lag(`Health Care and Social Assistance: U.S. Total`))
+  
+  
+  print("Increase in healthcare & social service high propensity applications Feb 2018-Feb 2020")
+  
+  bfs_nation %>%
+    filter((year==2020 & month=="Feb") | (year==2018 & month=="Feb")) %>%
+    select(month, `Health Care and Social Assistance: U.S. Total`) %>%
+    mutate(`Health Care and Social Assistance: U.S. Total` = as.numeric(`Health Care and Social Assistance: U.S. Total`)) %>%
+    
+    mutate(growth =100*(`Health Care and Social Assistance: U.S. Total` - lag(`Health Care and Social Assistance: U.S. Total`))/lag(`Health Care and Social Assistance: U.S. Total`))
+  
+  
+  print("In how many industries are applications lower in 2024 than 2019?")
   
   vals = names(bfs_nation)[2:23]
   vals = vals[-c(9,19)]
@@ -122,68 +172,10 @@ print("High propensity applications in November 2024")
     ungroup() %>% group_by(`higher in 2024 than 2019`) %>%
     count()
   
-  
 
 print("How far far has manufacturing fallen relative to 2019?")
 change_2019_2024_indsturies
 
-
-
-print("Retail trade high propensity applications Nov 2024")
-    
-  bfs_nation %>% filter(year==2024 & month=="Nov") %>%
-    select("Retail Trade: U.S. Total")
-
-  
-print("Retail trade as a % of all high propensity applications in 2024")
-
-  bfs_nation %>% filter(year==2024) %>%
-    summarise(`Retail Trade: U.S. Total` = sum(as.numeric(`Retail Trade: U.S. Total`), na.rm=TRUE),
-              `Total High Propensity Applications` = sum(as.numeric(`Total High Propensity Applications`), na.rm=TRUE)) %>%
-    mutate(`Retail trade % of total` = 100*(`Retail Trade: U.S. Total`)/(`Total High Propensity Applications`)) %>%
-    select(`Retail trade % of total`)
-
-  
-print("highest industries as a % of high propensity applications in 2024")
-
-          # total high propensity 2024
-          high_propensity = bfs_nation %>% filter(year==2024) %>%
-            mutate(`Total High Propensity Applications` =as.numeric(`Total High Propensity Applications`)) %>%
-            summarise(val = sum(`Total High Propensity Applications`, na.rm=TRUE))
-          high_propensity = high_propensity$val
-
-    bfs_nation %>% filter(year==2024) %>%
-      ungroup() %>%
-      
-      # pivot longer using states
-      pivot_longer(cols = names(bfs_nation)[2:23]) %>%
-      ungroup() %>% group_by(year, name) %>%
-      summarise(value = sum(as.numeric(value), na.rm=TRUE)) %>%
-      arrange(desc(value)) %>%
-      mutate(`share of high propensity` = 100*value/high_propensity)
-
-    
-print("Increase in healthcare & social service high propensity applications last 2 years Nov 2022 - Nov 2024")
-
-  bfs_nation %>%
-    filter((year==2024 & month == "Nov") | (year==2022 & month=="Nov")) %>%
-    select(year, `Health Care and Social Assistance: U.S. Total`) %>%
-    
-    mutate(`Health Care and Social Assistance: U.S. Total` = 
-             as.numeric(`Health Care and Social Assistance: U.S. Total`)) %>%
-    
-    mutate(growth =100*(`Health Care and Social Assistance: U.S. Total` - lag(`Health Care and Social Assistance: U.S. Total`))/lag(`Health Care and Social Assistance: U.S. Total`))
-
-  
-print("Increase in healthcare & social service high propensity applications Feb 2018-Feb 2020")
-
-  bfs_nation %>%
-    filter((year==2020 & month=="Feb") | (year==2018 & month=="Feb")) %>%
-    select(month, `Health Care and Social Assistance: U.S. Total`) %>%
-    mutate(`Health Care and Social Assistance: U.S. Total` = as.numeric(`Health Care and Social Assistance: U.S. Total`)) %>%
-    
-    mutate(growth =100*(`Health Care and Social Assistance: U.S. Total` - lag(`Health Care and Social Assistance: U.S. Total`))/lag(`Health Care and Social Assistance: U.S. Total`))
-  
 
 ################################################################################
 # statistics for section 3 in report - BFS states
@@ -212,12 +204,6 @@ paste("Number of states that saw a decline in high propensity applications 2023-
       decline = count(decline_df_2023_2024 %>% filter(change_2023_2024<0))
       decline
 
-paste("% of states that saw a decline in high propensity applications 2023-2024")
-  decline/51*100
-  
-paste("State with the largest decline 2023-2024, & rate:")
-decline_df_2023_2024 %>%
-      arrange(change_2023_2024)
 
 paste("Top 3 states in terms of high propensity applications:")
     
@@ -348,36 +334,6 @@ paste("States that had more establishment births in Q1 2024 versus Q1 2020")
     pivot_wider(names_from = Year,
                 values_from = estab_births) %>%
     filter(`2024`>`2020`))
-    
   
-paste("Georgia’s increase in establishment births: Q1 2020 was, Q1 2024 was")
-
-    bdm_states %>%
-      filter(Year==2024 | Year==2020) %>% filter(quarter == "March") %>%
-      ungroup() %>%
-      select(Year, state, estab_births) %>%
-      pivot_wider(names_from = Year,
-                  values_from = estab_births) %>%
-      filter(state=="ga")
-
-
-paste("Oregon’s drop: Q1 2020 was , Q1 2024 was")
-
-  bdm_states %>%
-    filter(Year==2024 | Year==2020) %>% filter(quarter == "March") %>%
-    ungroup() %>%
-    select(Year, state, estab_births) %>%
-    pivot_wider(names_from = Year,
-                values_from = estab_births) %>%
-    filter(state=="or")
-
-
-paste("Connecticut’s drop:  Q1 2020 was , Q1 2024 was")
-
-  bdm_states %>%
-    filter(Year==2024 | Year==2020) %>% filter(quarter == "March") %>%
-    ungroup() %>%
-    select(Year, state, estab_births) %>%
-    pivot_wider(names_from = Year,
-                values_from = estab_births) %>%
-    filter(state=="ct")
+  
+  # correlations in figures document.
