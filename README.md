@@ -3,16 +3,14 @@ This repository includes the data and code supporting EIG's "The Year in Dynamis
 
 ## Data Sources:
 
-1. Census Bureau's Business Formation Statistics (link)[https://www.census.gov/econ/bfs/data.html]
+1. Census Bureau's Business Formation Statistics (BFS) (link)[https://www.census.gov/econ/bfs/data.html]
 
-2. Bureau of Labor Statistics' Business Employment Dynamics (link)[https://www.bls.gov/bdm/]
+2. Bureau of Labor Statistics' Business Employment Dynamics (BDM) (link)[https://www.bls.gov/bdm/]
 
 ## Folder Contents:
 
-1. <b>Code: </b>
+1. <b>code: </b> contains wrangling code, code that constructs figures, and statistics included in the report in seperate files.
 
-2. <b>data: </b>
+2. <b>data: </b> contains the BFS and BDM data
 
-3. <b>draft: </b>
-
-4. <b>output: </b>
+3. <b>output: </b> contains the wrangled BFS and BDM data for states, industries, and nation-wide, as well as data underlying the figures.
