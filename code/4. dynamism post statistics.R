@@ -105,8 +105,6 @@ print("High propensity applications in November 2024")
   bfs_nation %>% filter(year == 2024 & month == "Nov") %>%
     select(`Total High Propensity Applications`)
 
-
-
 ################################################################################
 # statistics for section 2 in report - BFS industry
   
@@ -215,66 +213,6 @@ paste("Top 3 states in terms of high propensity applications:")
       # total applications
       summarise(applications = sum(as.numeric(applications))) %>%
       arrange(desc(applications))
-    
-paste("Texas overtook New York for #3 spot in # of high propensity application filings in 2024 relative to 2019")
-    
-    decline_df_2019_2024 = 
-      bfs_states %>%
-        filter(year == 2019 | year==2024) %>% 
-        filter(month !="Dec") %>% #remove December of 2019 for comparison
-        select(-c(date, month)) %>%
-        pivot_longer(cols = names(bfs_states)[2:52],
-                     names_to = "state", values_to = "applications") %>%
-        
-        ungroup() %>%
-        group_by(year, state) %>%
-        summarise(applications = sum(as.numeric(applications))) %>%
-        pivot_wider(names_from = year, values_from = applications) %>%
-        mutate(change_2019_2024 = 100*(`2024` - `2019`)/ `2019`)
-
-    # sort to show ranking
-        decline_df_2019_2024 %>%
-          arrange(desc(`2019`))
-        
-        decline_df_2019_2024 %>%
-          arrange(desc(`2024`))
-
-    
-paste("Texas high propensity applications in 2019 (excl. December)")
-
-  bfs_states %>%
-    filter(year==2019 & month!="Dec") %>%
-    summarise(Texas = sum(as.numeric(Texas)))
-
-  
-paste("Texas high  propensity applications in 2024")
-
-  bfs_states %>%
-    filter(year==2024 & month!="Dec") %>%
-    summarise(Texas = sum(as.numeric(Texas)))
-
-paste("West Virginia increase in high propensity business applications 2019-2024")
-  bfs_states %>%
-    filter(month !="Dec") %>% filter(year==2019 | year==2024) %>%
-    group_by(year) %>%
-    summarise(`West Virginia` = sum(as.numeric(`West Virginia`))) %>%
-    mutate(change = 100*(`West Virginia` - lag(`West Virginia`))/lag(`West Virginia`))
-
-
-paste("Number of states that more than doubled high propensity applications:")
-  
-  decline_df_2019_2024 %>%
-    filter(`2024` > 2*`2019`)
-    
-paste("Number of states that had > 50% increase in applications")
-  count(decline_df_2019_2024 %>%
-    filter(change_2019_2024 >50))
-  
-  
-# cleaning
-  rm(decline, decline_df_2019_2024, decline_df_2023_2024)
-
-  
   
 #######
 # BDM #
