@@ -18,6 +18,9 @@ output_path = file.path(project_path, "output")
 # NATION #
 ##########
 
+# read in national level files from the Census's BFS; 
+# seasonally adjusted high propensity national totals & industry, and total seasonally adjusted applications 
+
 national_files = list.files(file.path(data_path,"BFS", "national"), full.names = TRUE)
 
 national_list = list()
@@ -58,6 +61,7 @@ save(bfs_nation, file = file.path(output_path, "bfs_nation.RData"))
 ##########
 # STATES #
 ##########
+# seasonally adjusted high-propensity applications by state
 
 state_files =  list.files(file.path(data_path,"BFS", "state"), full.names = TRUE)
 state_list = list()
