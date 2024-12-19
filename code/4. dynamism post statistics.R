@@ -149,6 +149,7 @@ print("High propensity applications in November 2024")
               retail_trade = mean(as.numeric(`Retail Trade: U.S. Total`)),
               food_service = mean(as.numeric(`Accommodation and Food Services: U.S. Total`)),
               construction = mean(as.numeric(`Construction: U.S. Total`))) %>%
+    
     mutate(healthcare_perc = 100*(healthcare - lag(healthcare))/lag(healthcare),
            food_perc = 100*(food_service - lag(food_service))/lag(food_service),
            construction_perc = 100*(construction - lag(construction))/lag(construction),
