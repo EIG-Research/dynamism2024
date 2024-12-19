@@ -110,58 +110,11 @@ print("High propensity applications in November 2024")
 ################################################################################
 # statistics for section 2 in report - BFS industry
   
-  
-  print("Retail trade high propensity applications Nov 2024")
-  
-  bfs_nation %>% filter(year==2024 & month=="Nov") %>%
-    select("Retail Trade: U.S. Total")
-  
-  print("highest industries as a % of high propensity applications in 2024")
-  
-  # total high propensity 2024
-  high_propensity = bfs_nation %>% filter(year==2024) %>%
-    mutate(`Total High Propensity Applications` =as.numeric(`Total High Propensity Applications`)) %>%
-    summarise(val = sum(`Total High Propensity Applications`, na.rm=TRUE))
-  high_propensity = high_propensity$val
-  
-  bfs_nation %>% filter(year==2024) %>%
-    ungroup() %>%
-    
-    # pivot longer using states
-    pivot_longer(cols = names(bfs_nation)[2:23]) %>%
-    ungroup() %>% group_by(year, name) %>%
-    summarise(value = sum(as.numeric(value), na.rm=TRUE)) %>%
-    arrange(desc(value)) %>%
-    mutate(`share of high propensity` = 100*value/high_propensity)
-  
-  
-  print("Increase in healthcare & social service high propensity applications last 2 years Nov 2022 - Nov 2024")
-  
-  bfs_nation %>%
-    filter((year==2024 & month == "Nov") | (year==2022 & month=="Nov")) %>%
-    select(year, `Health Care and Social Assistance: U.S. Total`) %>%
-    
-    mutate(`Health Care and Social Assistance: U.S. Total` = 
-             as.numeric(`Health Care and Social Assistance: U.S. Total`)) %>%
-    
-    mutate(growth =100*(`Health Care and Social Assistance: U.S. Total` - lag(`Health Care and Social Assistance: U.S. Total`))/lag(`Health Care and Social Assistance: U.S. Total`))
-  
-  
-  print("Increase in healthcare & social service high propensity applications Feb 2018-Feb 2020")
-  
-  bfs_nation %>%
-    filter((year==2020 & month=="Feb") | (year==2018 & month=="Feb")) %>%
-    select(month, `Health Care and Social Assistance: U.S. Total`) %>%
-    mutate(`Health Care and Social Assistance: U.S. Total` = as.numeric(`Health Care and Social Assistance: U.S. Total`)) %>%
-    
-    mutate(growth =100*(`Health Care and Social Assistance: U.S. Total` - lag(`Health Care and Social Assistance: U.S. Total`))/lag(`Health Care and Social Assistance: U.S. Total`))
-  
-  
   print("In how many industries are applications lower in 2024 than 2019?")
   
   vals = names(bfs_nation)[2:23]
   vals = vals[-c(9,19)]
-
+  
   change_2019_2024_indsturies = bfs_nation %>%
     filter(year==2024 | year==2019) %>%
     filter(month !="Dec") %>%
@@ -185,9 +138,37 @@ print("High propensity applications in November 2024")
     ungroup() %>% group_by(`higher in 2024 than 2019`) %>%
     count()
   
-
-print("How far far has manufacturing fallen relative to 2019?")
-change_2019_2024_indsturies
+  # but which industries?
+  change_2019_2024_indsturies %>% filter(`higher in 2024 than 2019` == "False")
+  
+  
+  # growth for retail trade, healthcare and social assistance, accommodation and food services, and construction from 2019-2024
+  bfs_nation %>% 
+    filter(year == 2019 | year == 2024) %>% filter(month != "Dec") %>%
+    ungroup() %>%
+    group_by(year) %>%
+    summarise(healthcare = mean(as.numeric(`Health Care and Social Assistance: U.S. Total`)),
+              retail_trade = mean(as.numeric(`Retail Trade: U.S. Total`)),
+              food_service = mean(as.numeric(`Accommodation and Food Services: U.S. Total`)),
+              construction = mean(as.numeric(`Construction: U.S. Total`))) %>%
+    mutate(healthcare_perc = 100*(healthcare - lag(healthcare))/lag(healthcare),
+           food_perc = 100*(food_service - lag(food_service))/lag(food_service),
+           construction_perc = 100*(construction - lag(construction))/lag(construction),
+           retail_perc = 100*(retail_trade - lag(retail_trade))/lag(retail_trade))
+  
+  # these 4 industries make up what % of total apps in 2024?
+      
+    change_2019_2024_indsturies %>%
+      ungroup() %>%
+      mutate(total_2024 = sum(`2024`),
+             share_2024 = `2024`/total_2024) %>%
+      filter(name %in% c(
+        "Health Care and Social Assistance: U.S. Total",
+        "Retail Trade: U.S. Total",
+        "Accommodation and Food Services: U.S. Total",
+        "Construction: U.S. Total"
+      )) %>%
+      summarise(sum(share_2024))
 
 
 ################################################################################
