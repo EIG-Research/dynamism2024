@@ -13,9 +13,9 @@ library(readr)
 
 # set project paths
 
-user_path = "ENTER USER PATH HERE"
+user_path = "/Users/sarah/Documents/GitHub"
 
-  project_path = file.path(user_path, "/dynamism2024")
+  project_path = file.path(user_path, "dynamism2024")
   data_path = file.path(project_path, "data")
   output_path = file.path(project_path, "output")
 
@@ -58,6 +58,19 @@ print("% change in business application filing since 2023, excluding December 20
     pivot_wider(names_from = year, values_from = `Total Applications`) %>%
     mutate(`change year over year` = 100*(`2024` - `2023`)/`2023`)
 
+print("% change in high-propensity business application filing since 2023, excluding December 2023")
+  
+  bfs_nation %>%
+    filter(year == 2023 | year==2024) %>% filter(month!="Dec") %>%
+    
+    select(year, `Total High Propensity Applications`) %>%
+    
+    ungroup() %>% group_by(year) %>% 
+    
+    summarise(`Total High Propensity Applications` = sum(as.numeric(`Total High Propensity Applications`))) %>%
+    pivot_wider(names_from = year, values_from = `Total High Propensity Applications`) %>%
+    mutate(`change year over year` = 100*(`2024` - `2023`)/`2023`)
+  
   
 print("Monthly average high-propensity applications in 2024")
   
