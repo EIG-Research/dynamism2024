@@ -10,7 +10,7 @@ library(readxl)
 library(readr)
 library(stringr)
 
-user_path = "/Users/sarah/Documents/GitHub"
+user_path = "ENTER USER PATH HERE"
 
 project_path = file.path(user_path, "/dynamism2024")
 data_path = file.path(project_path, "data")
@@ -19,6 +19,8 @@ output_path = file.path(project_path, "output")
 ##########
 # STATES #
 ##########
+
+# births & deaths for estabilshments and employment by state. seasonally adjusted.
 
 file_names = list.files(
   file.path(data_path, "BDM", "states"), pattern = "*.txt", full.names = TRUE)
@@ -82,6 +84,7 @@ save(bdm_states, file = file.path(output_path, "bdm_states.RData"))
 ############
 # NATIONAL #
 ############
+# national births & deaths for establishments and employment. seasonally adjusted
 
 bdm_nation = read.delim(
   file.path(data_path, "BDM", "nation", "table9_1.txt"), 
