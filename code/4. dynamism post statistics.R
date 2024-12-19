@@ -58,6 +58,7 @@ print("% change in business application filing since 2023, excluding December 20
     pivot_wider(names_from = year, values_from = `Total Applications`) %>%
     mutate(`change year over year` = 100*(`2024` - `2023`)/`2023`)
 
+  
 print("% change in high-propensity business application filing since 2023, excluding December 2023")
   
   bfs_nation %>%
@@ -79,32 +80,7 @@ print("Monthly average high-propensity applications in 2024")
       summarise(`Monthly mean high propensity` = 
                   mean(`Total High Propensity Applications`,na.rm=TRUE))
 
-
-print("Business applications in January 2024")
-
-  bfs_nation %>% filter(year == 2024 & month == "Jan") %>%
-    select(`Total Applications`)
-
   
-print("Business applications in March 2024")
-
-  bfs_nation %>% filter(year ==2024 & month == "Mar") %>%
-    select(`Total Applications`)
-
-
-print("High propensity applications low in 2024, and month of low")
-
-bfs_nation %>% filter(year == 2024 ) %>% 
-  filter(`Total High Propensity Applications` == min(`Total High Propensity Applications`)) %>%
-  
-  select(month, `Total High Propensity Applications`)
-
-  
-print("High propensity applications in November 2024")
-
-  bfs_nation %>% filter(year == 2024 & month == "Nov") %>%
-    select(`Total High Propensity Applications`)
-
 ################################################################################
 # statistics for section 2 in report - BFS industry
   
@@ -128,7 +104,8 @@ print("High propensity applications in November 2024")
     pivot_wider(names_from = year, values_from = value) %>%
     mutate(`higher in 2024 than 2019` = case_when(
       `2024` > `2019` ~ "True",
-      `2024` <= `2019` ~ "False"
+      `2024` <= `2019` ~ "False",
+      TRUE ~ NA
     ),
     `2024 - 2019` = 100*(`2024` - `2019`)/`2019`)
   
@@ -140,7 +117,8 @@ print("High propensity applications in November 2024")
   change_2019_2024_indsturies %>% filter(`higher in 2024 than 2019` == "False")
   
   
-  # growth for retail trade, healthcare and social assistance, accommodation and food services, and construction from 2019-2024
+  # how much larger are the annual monthly means?
+  # for retail trade, healthcare and social assistance, accommodation and food services, and construction from 2019-2024
   bfs_nation %>% 
     filter(year == 2019 | year == 2024) %>% filter(month != "Dec") %>%
     ungroup() %>%
@@ -150,10 +128,14 @@ print("High propensity applications in November 2024")
               food_service = mean(as.numeric(`Accommodation and Food Services: U.S. Total`)),
               construction = mean(as.numeric(`Construction: U.S. Total`))) %>%
     
-    mutate(healthcare_perc = 100*(healthcare - lag(healthcare))/lag(healthcare),
-           food_perc = 100*(food_service - lag(food_service))/lag(food_service),
-           construction_perc = 100*(construction - lag(construction))/lag(construction),
-           retail_perc = 100*(retail_trade - lag(retail_trade))/lag(retail_trade))
+    arrange(year) %>%
+    
+    mutate(healthcare_perc = healthcare/lag(healthcare),
+           food_perc = food_service/lag(food_service),
+           construction_perc = construction/lag(construction),
+           retail_perc = retail_trade/lag(retail_trade)) %>%
+    select(contains("perc"))
+  
   
   # these 4 industries make up what % of total apps in 2024?
       
