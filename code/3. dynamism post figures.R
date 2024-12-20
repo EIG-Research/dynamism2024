@@ -133,21 +133,10 @@ write.csv(fig4,
               paste(output_path, "figures", "fig6.csv",sep="/"))
     
 
-    # lag establishment growth
-    # 1 year lag -- use 1 year minus end year of establishments supposed to be.
-    # switch axes based on causation
-    
-    
-    # the comparable period
-
 # Fig 5:
-  # lagged by 1 year --
-      # Q2 2023 - Q1 2024
-      # Q2 2019 - Q1 2020
-
-  # Q2 2022 - Q1 2023
-  # Q2 2018 - Q1 2019
-  
+  # estabishment births assuming a 1 year lag --
+        # Q2 2022 - Q1 2023
+        # Q2 2018 - Q1 2019
   
     fig5 = bfs_states %>%
       mutate(keep = case_when(
@@ -203,14 +192,3 @@ write.csv(fig4,
     
     write.csv(fig5, 
               paste(output_path, "figures", "fig5.csv",sep="/"))
-    
-    
-    # covariance
-    cor(fig5$perc_change_apps, fig5$perc_change_births)
-    
-    # exclude outliers
-    fig5 = fig5 %>% 
-      filter(state != "Delaware" & state != "Wyoming")
-    
-    cor(fig5$perc_change_apps, fig5$perc_change_births)
-    
