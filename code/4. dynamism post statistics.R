@@ -222,12 +222,16 @@ paste("Pre-pandemic trend in establishment births; trend line 1994 - 2019, (excl
   
 paste("Births since Q2 2021 (thousands):")
 
-  bdm_nation %>% filter(year >= 2021) %>%
-    summarise(sum(estab_births))
-  4434 - 308
+ includingq12021= bdm_nation %>% filter(year >= 2021) %>%
+    summarise(sum(estab_births)) # including Q1 2021 
+  
+  q12021=bdm_nation %>% filter(year == 2021 & period=="March") %>%
+    summarise(sum(estab_births)) 
+  
+  includingq12021 -  q12021
   
 paste("Births between Q3 2017 and Q1 2020 (thousands):")
-  bdm_nation %>%
+  birthsq32017_toq12020 = bdm_nation %>%
     filter((period == "June" & year ==2017) |
               (period=="September" & year==2017) | 
              (period=="December" & year==2017) | 
@@ -235,20 +239,5 @@ paste("Births between Q3 2017 and Q1 2020 (thousands):")
              (period == "March" & year==2020)) %>%
     summarise(sum(estab_births))
     
-
-################################################################################
-# statistics for section 5 in report - BDM states
-  
-paste("States that had more establishment births in Q1 2024 versus Q1 2020")
-  
-  count(bdm_states %>%
-          filter(state !="pr") %>%
-    filter(Year==2024 | Year==2020) %>% filter(quarter == "March") %>%
-    ungroup() %>%
-    select(Year, state, estab_births) %>%
-    pivot_wider(names_from = Year,
-                values_from = estab_births) %>%
-    filter(`2024`>`2020`))
-  
-  
-  # correlations in figures document.
+  # difference (in thousands)
+  1000*(( includingq12021 -  q12021) - birthsq32017_toq12020)
