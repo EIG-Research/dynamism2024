@@ -12,7 +12,7 @@ library(tidycensus)
 
 # set project paths
 
-user_path = "ENTER USER PATH HERE"
+user_path = "/Users/sarah/Documents/GitHub"
 
 project_path = file.path(user_path, "/dynamism2024")
 data_path = file.path(project_path, "data")
@@ -102,15 +102,15 @@ write.csv(fig4,
 
 
 # Fig 6: establishment birth map by states
-# Q1 2019 - Q4 2019 versus
 # Q2 2023 - Q1 2024
+# Q2 2019 - Q1 2020
 
     fig6 = bdm_states %>%
       mutate(date = as.Date(paste(quarter, "1", Year), 
                             format = "%b %d %Y"),
              state = toupper(state)) %>%
       filter(date %in% c("2023-06-01", "2023-09-01", "2023-12-01", "2024-03-01",
-                         "2019-03-01", "2019-06-01", "2019-09-01", "2019-12-01")) %>%
+                         "2019-06-01", "2019-09-01", "2019-12-01", "2020-03-01")) %>%
       
       mutate(period = case_when(
         Year < 2021 ~ "pre",
@@ -124,7 +124,7 @@ write.csv(fig4,
                   values_from = estab_births, 
                   id_cols = state) %>%
       
-      mutate(perc_change_births = (post-pre)/pre,
+      mutate(perc_change_births = 100*(post-pre)/pre,
              net_change_births = post-pre) %>%
       rename(state_abrev = state) %>%
       mutate(state = state.name[match(state_abrev, state.abb)]) # for Figure 5 merging 
@@ -133,15 +133,36 @@ write.csv(fig4,
               paste(output_path, "figures", "fig6.csv",sep="/"))
     
 
-# Fig 5:
-    # relationship with business applications
+    # lag establishment growth
+    # 1 year lag -- use 1 year minus end year of establishments supposed to be.
+    # switch axes based on causation
     
+    
+    # the comparable period
+
+# Fig 5:
+  # lagged by 1 year --
+      # Q2 2023 - Q1 2024
+      # Q2 2019 - Q1 2020
+
+  # Q2 2022 - Q1 2023
+  # Q2 2018 - Q1 2019
+  
+  
     fig5 = bfs_states %>%
-      filter(year == 2023 | 
-               year == 2019)%>%
+      mutate(keep = case_when(
+        year==2022 & month %in% c("Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec") ~ 1,
+        year == 2023 & month %in% c("Jan", "Feb", "Mar") ~ 1,
+        
+        year == 2018 & month %in% c("Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec") ~ 1,
+        year == 2019 & month %in% c("Jan", "Feb", "Mar") ~ 1,
+        TRUE ~ 0
+      )) %>%
+      filter(keep ==1) %>%
+      
       mutate(period = case_when(
         year < 2021 ~ "pre",
-        year >2021 ~ "post")) %>%
+        year > 2021 ~ "post")) %>%
       select(-c(year, month, date))
     
     
@@ -159,7 +180,7 @@ write.csv(fig4,
       group_by(period, state) %>%
       summarise(applications = sum(as.numeric(applications))) %>%
       pivot_wider(names_from = period, values_from = applications) %>%
-      mutate(perc_change_apps = (post-pre)/pre,
+      mutate(perc_change_apps = 100*(post-pre)/pre,
              net_change_apps = post-pre)
     
   
