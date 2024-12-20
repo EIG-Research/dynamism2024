@@ -240,4 +240,4 @@ paste("Births between Q3 2017 and Q1 2020 (thousands):")
     summarise(sum(estab_births))
     
   # difference (in thousands)
-  1000*(( includingq12021 -  q12021) - birthsq32017_toq12020)
+  ( includingq12021 -  q12021) - birthsq32017_toq12020
