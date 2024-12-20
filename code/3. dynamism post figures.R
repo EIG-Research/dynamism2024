@@ -12,7 +12,7 @@ library(tidycensus)
 
 # set project paths
 
-user_path = "/Users/sarah/Documents/GitHub"
+user_path = "ENTER USER PATH HERE"
 
 project_path = file.path(user_path, "/dynamism2024")
 data_path = file.path(project_path, "data")
